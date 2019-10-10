@@ -141,7 +141,7 @@ if __name__ == "__main__":
                     db_gym_name=config['db_gym_name']
                 )
         mycursor_r.execute(gym_sel_query)
-        gym_result_ids.append(mycursor_r.fetchall())
+        gym_result_ids = mycursor_r.fetchall()
         
         gym_update_query = GYM_UPDATE_QUERY.format(
                 db_name=config['db_r_name'],
@@ -167,7 +167,7 @@ if __name__ == "__main__":
                     db_pokestop_name=config['db_pokestop_name']
                 )
         mycursor_r.execute(pokestop_sel_query)
-        pokestop_result_ids.append(mycursor_r.fetchall())
+        pokestop_result_ids = mycursor_r.fetchall()
     
         pokestop_update_query = POKESTOP_UPDATE_QUERY.format(
                     db_name=config['db_r_name'],
