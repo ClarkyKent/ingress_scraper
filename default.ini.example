@@ -1,0 +1,19 @@
+[DB]
+HOST = 0.0.0.0
+NAME = db
+USER = user
+PASSWORD = pwd
+PORT = 3306
+CHARSET = utf8mb4
+TABLE_GYM = gym
+TABLE_GYM_ID = id
+TABLE_GYM_NAME = name
+TABLE_GYM_IMAGE = url
+
+[Ingress]
+COOKIES = long_string_copied_from_browser
+USERNAME = gmail_username_without_@gmail.com
+PASSWORD = gmail_pwd
+
+[Other]
+ENCODING = utf-8
