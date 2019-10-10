@@ -17,6 +17,9 @@ DEFAULT_CONFIG = "default.ini"
 GYM_SELECT_QUERY = """SELECT {db_gym_id} FROM {db_name}.{db_gym} WHERE {db_gym_name} is NULL AND {db_gym_id} like '%.%'"""
 GYM_UPDATE_QUERY = """UPDATE {db_name}.{db_gym} set {db_gym_name}= %s, {db_gym_image} = %s WHERE {db_gym_id} = %s"""
 
+POKESTOP_SELECT_QUERY = """SELECT {db_pokestop_id} FROM {db_name}.{db_pokestop} WHERE {db_pokestop_name} is NULL AND {db_pokestop_id} like '%.%'"""
+POKESTOP_UPDATE_QUERY = """UPDATE {db_name}.{db_pokestop} set {db_pokestop_name}= %s, {db_pokestop_image} = %s WHERE {db_pokestop_id} = %s"""
+
 def create_config(config_path):
     """ Parse config. """
     config = dict()
@@ -53,6 +56,18 @@ def create_config(config_path):
     config['db_gym_image'] = config_raw.get(
         'DB',
         'TABLE_GYM_IMAGE')
+    config['db_pokestop'] = config_raw.get(
+        'DB',
+        'TABLE_POKESTOP')
+    config['db_pokestop_id'] = config_raw.get(
+        'DB',
+        'TABLE_POKESTOP_ID')
+    config['db_pokestop_name'] = config_raw.get(
+        'DB',
+        'TABLE_POKESTOP_NAME')
+    config['db_pokestop_image'] = config_raw.get(
+        'DB',
+        'TABLE_POKESTOP_IMAGE')
     config['username'] = config_raw.get(
         'Ingress',
         'USERNAME')
@@ -91,6 +106,10 @@ if __name__ == "__main__":
     portal_url = 7
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "-p", "--pokestop", action='store_true', help="updates pokestop only")
+    parser.add_argument(
+        "-g", "--gym", action='store_true', help="updates gyms only")
+    parser.add_argument(
         "-c", "--config", default="default.ini", help="Config file to use")
     args = parser.parse_args()
     config_path = args.config
@@ -110,29 +129,57 @@ if __name__ == "__main__":
     mycursor_r = mydb_r.cursor()
     print("Connection clear")
     
-    gym_sel_query = GYM_SELECT_QUERY.format(
-                db_gym_id=config['db_gym_id'],
-                db_name=config['db_r_name'],
-                db_gym=config['db_gym'],
-                db_gym_name=config['db_gym_name']
-            )
-    gym_update_query = GYM_UPDATE_QUERY.format(
+    
+    IngressLogin = IntelMap(config['cookies'], config['username'], config['pwd'])
+    
+    if args.gym:
+        
+        gym_sel_query = GYM_SELECT_QUERY.format(
+                    db_gym_id=config['db_gym_id'],
+                    db_name=config['db_r_name'],
+                    db_gym=config['db_gym'],
+                    db_gym_name=config['db_gym_name']
+                )
+        mycursor_r.execute(gym_sel_query)
+        gym_result_ids.append(mycursor_r.fetchall())
+        
+        gym_update_query = GYM_UPDATE_QUERY.format(
                 db_name=config['db_r_name'],
                 db_gym=config['db_gym'],
                 db_gym_name=config['db_gym_name'],
                 db_gym_image=config['db_gym_image'],
                 db_gym_id=config['db_gym_id'],
             )
-    mycursor_r.execute(gym_sel_query)
-    myresult_gym_ids = mycursor_r.fetchall()
             
+        for gym_id in gym_result_ids:
+            ingress_portal_details = IngressLogin.get_portal_details(gym_id[0])
+            if ingress_portal_details is not None:
+                print(ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url])
+                insert_args = (ingress_portal_details[portal_name],  ingress_portal_details[portal_url],  gym_id[0] )
+                mycursor_r.execute(gym_update_query, insert_args)
             
-    test = IntelMap(config['cookies'], config['username'], config['pwd'])
+    if args.pokestop:
     
-    for gym_id in myresult_gym_ids:
-        print(gym_id[0])
-        ingress_portal_details = test.get_portal_details('151923695d6c41fe91d31608ea836245.16')
-        if ingress_portal_details is not None:
-            print(ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url])
-            insert_args = (ingress_portal_details[portal_name],  ingress_portal_details[portal_url],  gym_id[0] )
-            mycursor_r.execute(gym_update_query, insert_args)
+        pokestop_sel_query = POKESTOP_SELECT_QUERY.format(
+                    db_pokestop_id=config['db_pokestop_id'],
+                    db_name=config['db_r_name'],
+                    db_pokestop=config['db_pokestop'],
+                    db_pokestop_name=config['db_pokestop_name']
+                )
+        mycursor_r.execute(pokestop_sel_query)
+        pokestop_result_ids.append(mycursor_r.fetchall())
+    
+        pokestop_update_query = POKESTOP_UPDATE_QUERY.format(
+                    db_name=config['db_r_name'],
+                    db_pokestop=config['db_pokestop'],
+                    db_pokestop_name=config['db_pokestop_name'],
+                    db_pokestop_image=config['db_pokestop_image'],
+                    db_pokestop_id=config['db_pokestop_id'],
+                )
+                
+        for stop_id in pokestop_result_ids:
+            ingress_portal_details = IngressLogin.get_portal_details(stop_id[0])
+            if ingress_portal_details is not None:
+                print(ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url])
+                insert_args = (ingress_portal_details[portal_name],  ingress_portal_details[portal_url],  stop_id[0] )
+                mycursor_r.execute(pokestop_update_query, insert_args)

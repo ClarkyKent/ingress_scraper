@@ -9,6 +9,10 @@ TABLE_GYM = gym
 TABLE_GYM_ID = id
 TABLE_GYM_NAME = name
 TABLE_GYM_IMAGE = url
+TABLE_POKESTOP = pokestop
+TABLE_POKESTOP_ID = id
+TABLE_POKESTOP_NAME = name
+TABLE_POKESTOP_IMAGE = url
 
 [Ingress]
 COOKIES = long_string_copied_from_browser
