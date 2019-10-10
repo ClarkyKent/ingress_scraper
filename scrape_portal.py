@@ -1,7 +1,7 @@
 from ingressAPI import IntelMap
 import argparse
 import json
-#from pymysql import connect
+from pymysql import connect
 
 # Python2 and Python3 compatibility
 try:
