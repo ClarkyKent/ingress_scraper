@@ -21,6 +21,10 @@ In order to make API work you need cookies from ingress's intel site.
 *pip install -r requirements.txt*
 
 # Run
-**python scrape_portal.py**
+to update stops
+**python scrape_portal.py -p**
 
-It should update names and url/image of gyms in rdm DB
+to update gyms
+**python scrape_portal.py -g**
+
+It should update names and url/image in rdm DB
