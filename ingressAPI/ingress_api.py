@@ -160,7 +160,6 @@ class IntelMap:
         try:
             return json.loads(_.text)
         except Exception as e:
-            print('Could not parse portal info for ', guid, 'check if it is valid portal', )
             return None
          
 

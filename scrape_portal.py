@@ -152,11 +152,16 @@ if __name__ == "__main__":
             )
             
         for gym_id in gym_result_ids:
-            ingress_portal_details = IngressLogin.get_portal_details(gym_id[0]).get('result')
+            ingress_portal_details = IngressLogin.get_portal_details(gym_id[0])
             if ingress_portal_details is not None:
-                print(ingress_portal_details[portal_name], ingress_portal_details[portal_url])
-                insert_args = (ingress_portal_details[portal_name],  ingress_portal_details[portal_url],  gym_id[0] )
-                mycursor_r.execute(gym_update_query, insert_args)
+                insert_args = (ingress_portal_details.get('result')[portal_name],  ingress_portal_details.get('result')[portal_url],  gym_id[0] )
+                try:
+                    mycursor_r.execute(gym_update_query, insert_args)
+                    print(gym_id[0], ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url], ' succeded and updated in DB')
+                except Exception as e:
+                    print(gym_id[0], ' Could not update in DB')
+            else:
+                print('Could not parse portal info for ', gym_id[0], 'check if it is valid portal', )
             
     if args.pokestop:
     
@@ -178,8 +183,14 @@ if __name__ == "__main__":
                 )
                 
         for stop_id in pokestop_result_ids:
-            ingress_portal_details = IngressLogin.get_portal_details(stop_id[0]).get('result')
+            ingress_portal_details = IngressLogin.get_portal_details(stop_id[0])
             if ingress_portal_details is not None:
-                print(ingress_portal_details[portal_name], ingress_portal_details[portal_url])
-                insert_args = (ingress_portal_details[portal_name],  ingress_portal_details[portal_url],  stop_id[0] )
-                mycursor_r.execute(pokestop_update_query, insert_args)
+                print(ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url])
+                insert_args = (ingress_portal_details.get('result')[portal_name],  ingress_portal_details.get('result')[portal_url],  stop_id[0] )                
+                try:
+                    mycursor_r.execute(pokestop_update_query, insert_args)
+                    print(stop_id[0], ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url], ' succeded and updated in DB')
+                except Exception as e:
+                    print(stop_id[0], ' Could not update in DB')
+            else:
+                print('Could not parse portal info for ', stop_id[0], 'check if it is valid portal', )
