@@ -159,7 +159,11 @@ if __name__ == "__main__":
                     mycursor_r.execute(gym_update_query, insert_args)
                     print(gym_id[0], ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url], ' succeded and updated in DB')
                 except Exception as e:
+                    print("~"*15)
                     print(gym_id[0], ' Could not update in DB')
+                    print("~"*15)
+                    print(e)
+                    print("~"*15)
             else:
                 print('Could not parse portal info for ', gym_id[0], 'check if it is valid portal', )
             
@@ -191,6 +195,11 @@ if __name__ == "__main__":
                     mycursor_r.execute(pokestop_update_query, insert_args)
                     print(stop_id[0], ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url], ' succeded and updated in DB')
                 except Exception as e:
+                    print("~"*15)
                     print(stop_id[0], ' Could not update in DB')
+                    print("~"*15)
+                    print(e)
+                    print("~"*15)
+                    
             else:
                 print('Could not parse portal info for ', stop_id[0], 'check if it is valid portal', )
