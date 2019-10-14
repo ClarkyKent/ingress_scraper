@@ -3,6 +3,7 @@ import argparse
 import json
 from pymysql import connect
 import mercantile
+import datetime
 
 # Python2 and Python3 compatibility
 try:
@@ -20,6 +21,8 @@ GYM_UPDATE_QUERY = """UPDATE {db_name}.{db_gym} set {db_gym_name}= %s, {db_gym_i
 
 POKESTOP_SELECT_QUERY = """SELECT {db_pokestop_id} FROM {db_name}.{db_pokestop} WHERE {db_pokestop_name} is NULL AND {db_pokestop_id} like '%.%'"""
 POKESTOP_UPDATE_QUERY = """UPDATE {db_name}.{db_pokestop} set {db_pokestop_name}= %s, {db_pokestop_image} = %s WHERE {db_pokestop_id} = %s"""
+
+PORTAL_UPDATE_QUERY = """INSERT IGNORE INTO {db_ingress}.ingress_portals(external_id, name, url, lat, lon, updated) VALUES(%s, %s, %s, %s, %s, %s)"""
 
 def create_config(config_path):
     """ Parse config. """
@@ -57,6 +60,9 @@ def create_config(config_path):
     config['db_gym_image'] = config_raw.get(
         'DB',
         'TABLE_GYM_IMAGE')
+    config['db_ingress'] = config_raw.get(
+        'DB',
+        'DB_INGRESS')
     config['db_pokestop'] = config_raw.get(
         'DB',
         'TABLE_POKESTOP')
@@ -142,6 +148,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-all", "--all_poi", action='store_true', help="updates gyms, pokestops and ingress portals")
     parser.add_argument(
+        "-i", "--ingress", action='store_true', help="updates ingress portal table")
+    parser.add_argument(
         "-c", "--config", default="default.ini", help="Config file to use")
     args = parser.parse_args()
     config_path = args.config
@@ -165,10 +173,41 @@ if __name__ == "__main__":
     
     IngressLogin = IntelMap(config['cookies'], config['username'], config['pwd'])
 
-    if args.all_poi:
+    if args.all_poi or args.ingress:
         bbox = list(map(float, config['bbox'].split(',')))
         bbox.append(zoom)
         all_portal_details, all_portals_id = get_all_portals(IngressLogin, bbox)
+        
+    if args.ingress:
+    
+        print("Initialize/Start DB Session")
+        mydb_r = connect(
+            host=config['db_r_host'],
+            user=config['db_r_user'],
+            passwd=config['db_r_pass'],
+            database=config['db_ingress'],
+            port=config['db_r_port'],
+            charset=config['db_r_charset'],
+            autocommit=True)
+
+        mycursor_ingres = mydb_r.cursor()
+        print("Connection clear")
+    
+        portal_update_query = PORTAL_UPDATE_QUERY.format(
+                db_ingress=config['db_ingress']
+            )
+        for idx, val in enumerate(all_portals_id):
+            lat = (all_portal_details[idx][2])/1e6
+            lon = (all_portal_details[idx][3])/1e6
+            updated_ts = datetime.datetime.now().strftime("%s")
+            insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts )
+            mycursor_ingres.execute(portal_update_query, insert_portal_args)
+            print("~"*50)
+            print("inserted ", all_portal_details[idx][portal_name]," ", all_portal_details[idx][portal_name], " into ingress table")
+            print("~"*50)
+
+    if args.all_poi:
+        
         gym_sel_query = GYM_SELECT_QUERY.format(
                     db_gym_id=config['db_gym_id'],
                     db_name=config['db_r_name'],
@@ -185,7 +224,7 @@ if __name__ == "__main__":
                 db_gym_image=config['db_gym_image'],
                 db_gym_id=config['db_gym_id'],
             )
-            
+
         for gym_id in gym_result_ids:
             try:
                 single_portal_detail = all_portal_details[all_portals_id.index(gym_id[0])]
@@ -214,7 +253,7 @@ if __name__ == "__main__":
                 )
         mycursor_r.execute(pokestop_sel_query)
         pokestop_result_ids = mycursor_r.fetchall()
-    
+
         pokestop_update_query = POKESTOP_UPDATE_QUERY.format(
                     db_name=config['db_r_name'],
                     db_pokestop=config['db_pokestop'],

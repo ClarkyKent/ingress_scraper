@@ -13,6 +13,7 @@ TABLE_POKESTOP = pokestop
 TABLE_POKESTOP_ID = id
 TABLE_POKESTOP_NAME = name
 TABLE_POKESTOP_IMAGE = url
+DB_INGRESS = PMSF_MANUAL_DB
 
 [Ingress]
 COOKIES = long_string_copied_from_browser
