@@ -20,6 +20,12 @@ In order to make API work you need cookies from ingress's intel site.
 # Installation 
 *pip install -r requirements.txt*
 
+# config
+for BBOX params in config file, go to http://bboxfinder.com and geofence your area you would like. once done it will give a rectangular shape for seleted area. copy whole line from after BBOX from the bottom panel)
+
+
+![BBOX params](https://i.imgur.com/QKROPSU.jpg)
+
 # Run
 to update stops
 **python scrape_portal.py -p**
