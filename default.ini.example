@@ -19,5 +19,8 @@ COOKIES = long_string_copied_from_browser
 USERNAME = gmail_username_without_@gmail.com
 PASSWORD = gmail_pwd
 
+[Area]
+BBOX = 0.00,0.00,0.00,0.00
+
 [Other]
 ENCODING = utf-8
