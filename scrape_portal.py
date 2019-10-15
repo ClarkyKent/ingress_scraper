@@ -112,16 +112,17 @@ def print_configs(config):
 def get_all_portals(login, bbox):
     mTiles = MapTiles(bbox)
     tiles = mTiles.getTiles()
-    print("Number of tiles in boundry are : ",len(tiles))
+    total_tiles = len(tiles)
+    print("Number of tiles in boundry are : ",total_tiles)
     timed_out_items = []
     portals = []
     portal_id = []
-    for tile in tiles:
+    for idx, tile in enumerate(tiles):
         iitc_xtile = int( tile[0] )
         iitc_ytile = int( tile[1] )
         
         iitc_tile_name  = ('{0}_{1}_{2}_0_8_100').format(zoom, iitc_xtile, iitc_ytile)
-        print("Getting portals from tile : ", iitc_tile_name)
+        print("{0}/{1}Getting portals from tile : {2}").format((idx+1), total_tiles, iitc_tile_name)
         tiles_data = login.get_entities([iitc_tile_name])
 
         if 'result' in tiles_data:
