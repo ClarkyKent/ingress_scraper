@@ -22,7 +22,7 @@ GYM_UPDATE_QUERY = """UPDATE {db_name}.{db_gym} set {db_gym_name}= %s, {db_gym_i
 POKESTOP_SELECT_QUERY = """SELECT {db_pokestop_id} FROM {db_name}.{db_pokestop} WHERE {db_pokestop_name} is NULL AND {db_pokestop_id} like '%.%'"""
 POKESTOP_UPDATE_QUERY = """UPDATE {db_name}.{db_pokestop} set {db_pokestop_name}= %s, {db_pokestop_image} = %s WHERE {db_pokestop_id} = %s"""
 
-PORTAL_UPDATE_QUERY = """INSERT IGNORE INTO {db_ingress}.ingress_portals(external_id, name, url, lat, lon, updated) VALUES(%s, %s, %s, %s, %s, %s)"""
+PORTAL_UPDATE_QUERY = """INSERT INTO {db_ingress}.ingress_portals(external_id, name, url, lat, lon, updated, imported) VALUES(%s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE updated =%s"""
 
 def create_config(config_path):
     """ Parse config. """
@@ -123,7 +123,7 @@ def get_all_portals(login, bbox):
         
         iitc_tile_name  = ('{0}_{1}_{2}_0_8_100').format(zoom, iitc_xtile, iitc_ytile)
         current_tile = idx+1
-        print(current_tile,'/',total_tiles, 'Getting portals from tile : ',iitc_tile_name)
+        print(str("{0}/{1} Getting portals from tile : {2}").format(current_tile, total_tiles, iitc_tile_name))
         tiles_data = login.get_entities([iitc_tile_name])
 
         if 'result' in tiles_data:
@@ -203,7 +203,7 @@ if __name__ == "__main__":
             lat = (all_portal_details[idx][2])/1e6
             lon = (all_portal_details[idx][3])/1e6
             updated_ts = datetime.datetime.now().strftime("%s")
-            insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts )
+            insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts, updated_ts, updated_ts )
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
