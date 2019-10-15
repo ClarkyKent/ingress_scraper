@@ -33,4 +33,15 @@ to update stops
 to update gyms
 **python scrape_portal.py -g**
 
+to update ingress portals in manual DB
+**python scrape_portal.py -i**
+
+to update gyms and pokestops by geofence
+**python scrape_portal.py -all -g -p**
+
+to update gyms by geofence
+**python scrape_portal.py -all -g**
+
+to update pokestops by geofence
+**python scrape_portal.py -all -p**
 It should update names and url/image in rdm DB
