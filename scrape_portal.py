@@ -1,8 +1,8 @@
-from ingressAPI import IntelMap
+from ingressAPI import IntelMap, MapTiles
 import argparse
 import json
 from pymysql import connect
-import mercantile
+import math
 import datetime
 
 # Python2 and Python3 compatibility
@@ -110,14 +110,15 @@ def print_configs(config):
     print("~"*15)
 
 def get_all_portals(login, bbox):
-    tiles = list(mercantile.tiles(*bbox))
+    mTiles = MapTiles(bbox)
+    tiles = mTiles.getTiles()
     print("Number of tiles in boundry are : ",len(tiles))
     timed_out_items = []
     portals = []
     portal_id = []
     for tile in tiles:
-        iitc_xtile = int( tile[0] - 396 )        # To be check
-        iitc_ytile = int( tile[1] - 276 )    # To be check
+        iitc_xtile = int( tile[0] )
+        iitc_ytile = int( tile[1] )
         
         iitc_tile_name  = ('{0}_{1}_{2}_0_8_100').format(zoom, iitc_xtile, iitc_ytile)
         print("Getting portals from tile : ", iitc_tile_name)
@@ -201,10 +202,16 @@ if __name__ == "__main__":
             lon = (all_portal_details[idx][3])/1e6
             updated_ts = datetime.datetime.now().strftime("%s")
             insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts )
-            mycursor_ingres.execute(portal_update_query, insert_portal_args)
-            print("~"*50)
-            print("inserted ", all_portal_details[idx][portal_name]," ", all_portal_details[idx][portal_name], " into ingress table")
-            print("~"*50)
+            try:
+                mycursor_ingres.execute(portal_update_query, insert_portal_args)
+                print("~"*50)
+                print("inserted ", all_portal_details[idx][portal_name]," ", all_portal_details[idx][portal_name], " into ingress table")
+                print("~"*50)
+            except Exception as e:
+                print(e)
+                print("#"*50)
+                print('could not put in db {0} ').format(val)
+                print("#"*50)
 
     if args.all_poi:
         

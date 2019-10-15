@@ -9,6 +9,7 @@ from time import time
 import getpass
 from bs4 import BeautifulSoup as bs
 from requests.utils import dict_from_cookiejar, cookiejar_from_dict
+import math
 __AUTHOR__ = 'lc4t0.0@gmail.com'
 
 
@@ -34,7 +35,30 @@ def tile2lng(x, tpe):
 def tile2lat(y, tpe):
     n = math.pi - 2 * math.pi * y / tpe;
     return 180 / math.pi * math.atan(0.5 * (math.exp(n) - math.exp(-n)));
+    
+    
 
+class MapTiles:
+
+    def __init__(self, bbox):
+        self.LowerLng = bbox[0]
+        self.LowerLat = bbox[1]
+        self.UpperLng = bbox[2]
+        self.UpperLat = bbox[3]
+        self.zpe = get_tiles_per_edge(15)
+        self.tiles = []
+        
+    def getTiles(self):        
+        Lx = lng2tile(self.LowerLng, self.zpe)
+        Ly = lat2tile(self.LowerLat, self.zpe)
+        Ux = lng2tile(self.UpperLng, self.zpe)
+        Uy = lat2tile(self.UpperLat, self.zpe)
+
+        for x in range(Lx, Ux+1):
+            for y in range(Uy, Ly+1):
+                self.tiles.append([x,y])
+
+        return self.tiles
 
 class IntelMap:
     r = requests.Session()
