@@ -209,12 +209,12 @@ if __name__ == "__main__":
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
-                print(str("inserted {0} into ingress table").format(p_name)
+                print("inserted {0} into ingress table").format(p_name)
                 print("~"*50)
             except Exception as e:
                 print(e)
                 print("#"*50)
-                print(str('could not put in db {0} {1} ').format(val, p_name)
+                print('could not put in db {0} {1} ').format(val, p_name)
                 print("#"*50)
 
     if args.all_poi:
