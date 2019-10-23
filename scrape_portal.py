@@ -214,7 +214,7 @@ if __name__ == "__main__":
             except Exception as e:
                 print(e)
                 print("#"*50)
-                print('could not put in db {0} {1} ').format(val, all_portal_details[idx][portal_name])
+                print(str('could not put in db {0} {1} ').format(val, all_portal_details[idx][portal_name]))
                 print("#"*50)
 
     if args.all_poi:
