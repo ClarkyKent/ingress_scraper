@@ -22,7 +22,7 @@ GYM_UPDATE_QUERY = """UPDATE {db_name}.{db_gym} set {db_gym_name}= %s, {db_gym_i
 POKESTOP_SELECT_QUERY = """SELECT {db_pokestop_id} FROM {db_name}.{db_pokestop} WHERE {db_pokestop_name} is NULL AND {db_pokestop_id} like '%.%'"""
 POKESTOP_UPDATE_QUERY = """UPDATE {db_name}.{db_pokestop} set {db_pokestop_name}= %s, {db_pokestop_image} = %s WHERE {db_pokestop_id} = %s"""
 
-PORTAL_UPDATE_QUERY = """INSERT INTO {db_ingress}.ingress_portals(external_id, name, url, lat, lon, updated, imported) VALUES(%s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE updated =%s"""
+PORTAL_UPDATE_QUERY = """INSERT INTO {db_ingress}.ingress_portals(external_id, name, url, lat, lon, updated, imported) VALUES(%s, %s, %s, %s, %s, %s, %s) ON DUPLICATE KEY UPDATE updated =%s, name=%s, url=%s, lat=%s, lon=%s"""
 
 def create_config(config_path):
     """ Parse config. """
@@ -203,7 +203,7 @@ if __name__ == "__main__":
             lat = (all_portal_details[idx][2])/1e6
             lon = (all_portal_details[idx][3])/1e6
             updated_ts = datetime.datetime.now().strftime("%s")
-            insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts, updated_ts, updated_ts )
+            insert_portal_args = (val,  all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], lat, lon, updated_ts, updated_ts, updated_ts, all_portal_details[idx][portal_name],  all_portal_details[idx][portal_url], , lat, lon)
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
