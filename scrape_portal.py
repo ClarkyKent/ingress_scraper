@@ -207,7 +207,7 @@ if __name__ == "__main__":
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
-                print("inserted ", all_portal_details[idx][portal_name]," ", all_portal_details[idx][portal_name], " into ingress table")
+				print(str("inserted {0} into ingress table").format(all_portal_details[idx][portal_name]))
                 print("~"*50)
             except Exception as e:
                 print(e)
@@ -241,7 +241,8 @@ if __name__ == "__main__":
                 try:
                     mycursor_r.execute(gym_update_query, insert_args)
                     updated_gyms = updated_gyms +1
-                    print(gym_id[0], single_portal_detail[portal_name], single_portal_detail[portal_url], ' succeeded and updated in DB')
+                    print(str("ID- {0} Name-{1}inserted {0} into ingress table").format(gym_id[0], single_portal_detail[portal_name]))
+                    print(, ' ')
                 except Exception as e:
                     print("~"*15)
                     print(gym_id[0], ' Could not update in DB')
@@ -278,7 +279,7 @@ if __name__ == "__main__":
                 try:
                     mycursor_r.execute(pokestop_update_query, insert_args)
                     updated_pokestops = updated_pokestops + 1
-                    print(stop_id[0], single_portal_detail[portal_name], single_portal_detail[portal_url], ' succeeded and updated in DB')
+                    print(stop_id[0], single_portal_detail[portal_name], ' succeeded and updated in DB')
                 except Exception as e:
                     print("~"*15)
                     print(stop_id[0], ' Could not update in DB')
