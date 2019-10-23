@@ -242,7 +242,6 @@ if __name__ == "__main__":
                     mycursor_r.execute(gym_update_query, insert_args)
                     updated_gyms = updated_gyms +1
                     print(str("ID- {0} Name-{1}inserted {0} into ingress table").format(gym_id[0], single_portal_detail[portal_name]))
-                    print(, ' ')
                 except Exception as e:
                     print("~"*15)
                     print(gym_id[0], ' Could not update in DB')
