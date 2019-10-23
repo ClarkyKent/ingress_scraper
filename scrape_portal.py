@@ -207,7 +207,7 @@ if __name__ == "__main__":
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
-				print(str("inserted {0} into ingress table").format(all_portal_details[idx][portal_name]))
+                print(str("inserted {0} into ingress table").format(all_portal_details[idx][portal_name]))
                 print("~"*50)
             except Exception as e:
                 print(e)
