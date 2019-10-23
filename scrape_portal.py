@@ -202,19 +202,19 @@ if __name__ == "__main__":
         for idx, val in enumerate(all_portals_id):
             lat = (all_portal_details[idx][2])/1e6
             lon = (all_portal_details[idx][3])/1e6
-            p_name = all_portal_details[idx][portal_name]
+            p_name = (all_portal_details[idx][portal_name]).encode('utf-8')
             p_url = all_portal_details[idx][portal_url]
             updated_ts = datetime.datetime.now().strftime("%s")
             insert_portal_args = (val,  p_name,  p_url, lat, lon, updated_ts, updated_ts, updated_ts, p_name,  p_url, lat, lon)
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
-                print(str("inserted {0} into ingress table").format(all_portal_details[idx][portal_name]))
+                print(str("inserted {0} into ingress table").format(p_name)
                 print("~"*50)
             except Exception as e:
                 print(e)
                 print("#"*50)
-                print(str('could not put in db {0} {1} ').format(val, all_portal_details[idx][portal_name]))
+                print(str('could not put in db {0} {1} ').format(val, p_name)
                 print("#"*50)
 
     if args.all_poi:
