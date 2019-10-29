@@ -209,12 +209,12 @@ if __name__ == "__main__":
             try:
                 mycursor_ingres.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
-                print("inserted {0} into ingress table").format(p_name)
+                print("inserted {0} into ingress table".format(p_name))
                 print("~"*50)
             except Exception as e:
                 print(e)
                 print("#"*50)
-                print('could not put in db {0} {1} ').format(val, p_name)
+                print("could not put in db {0} {1} ".format(val, p_name))
                 print("#"*50)
 
     if args.all_poi:
@@ -243,7 +243,7 @@ if __name__ == "__main__":
                 try:
                     mycursor_r.execute(gym_update_query, insert_args)
                     updated_gyms = updated_gyms +1
-                    print(str("ID- {0} Name-{1}inserted {0} into ingress table").format(gym_id[0], single_portal_detail[portal_name]))
+                    print(str("ID- {0} Name-{1}inserted {0} into ingress table".format(gym_id[0], single_portal_detail[portal_name])))
                 except Exception as e:
                     print("~"*15)
                     print(gym_id[0], ' Could not update in DB')
@@ -252,7 +252,7 @@ if __name__ == "__main__":
                     print("~"*15)
             except Exception as e:
                 print(e)
-                print('Did not {0} find missing gym_id in given BBOX boundry').format(gym_id)
+                print("Did not {0} find missing gym_id in given BBOX boundry".format(gym_id))
         print('Total gyms updated: ', updated_gyms)
 
     
