@@ -107,6 +107,7 @@ def get_all_portals(login, tiles):
     timed_out_items = []
     portals = []
     portal_id = []
+    tiles_data = []
     for idx, tile in enumerate(tiles):
         iitc_xtile = int( tile[0] )
         iitc_ytile = int( tile[1] )
@@ -114,19 +115,26 @@ def get_all_portals(login, tiles):
         iitc_tile_name  = ('{0}_{1}_{2}_0_8_100').format(zoom, iitc_xtile, iitc_ytile)
         current_tile = idx+1
         print(str("{0}/{1} Getting portals from tile : {2}").format(current_tile, total_tiles, iitc_tile_name))
-        tiles_data = login.get_entities([iitc_tile_name])
-
-        if 'result' in tiles_data:
-                for data in tiles_data['result']['map']:
-                    if 'error' in tiles_data['result']['map'][data]:
+        try:
+            tiles_data.append(login.get_entities([iitc_tile_name]))
+        except:
+            print(str("Something went wrong while getting portal from tile {0}").format(current_tile) )
+    for tile_data in tiles_data:
+        try:
+            if 'result' in tile_data:
+                for data in tile_data['result']['map']:
+                    if 'error' in tile_data['result']['map'][data]:
                         timed_out_items.append(data)
                     else:
-                        for entry in tiles_data['result']['map'][data]['gameEntities']:
+                        for entry in tile_data['result']['map'][data]['gameEntities']:
                             #print(entry)
                             if entry[2][0] == 'p':
                                 portal_id.append(entry[0])
                                 portals.append(entry[2])
                                 #print(entry[0])
+        except:
+            print("could not parse all prtals")
+    print(portals)
     return portals, portal_id
 
 if __name__ == "__main__":
@@ -150,17 +158,17 @@ if __name__ == "__main__":
     print_configs(config)
 
     print("Initialize/Start DB Session")
-    # mydb_r = connect(
-        # host=config['db_r_host'],
-        # user=config['db_r_user'],
-        # passwd=config['db_r_pass'],
-        # database=config['db_r_name'],
-        # port=config['db_r_port'],
-        # charset=config['db_r_charset'],
-        # autocommit=True)
+    mydb_r = connect(
+        host=config['db_r_host'],
+        user=config['db_r_user'],
+        passwd=config['db_r_pass'],
+        database=config['db_r_name'],
+        port=config['db_r_port'],
+        charset=config['db_r_charset'],
+        autocommit=True)
 
-    # mycursor_r = mydb_r.cursor()
-    # print("Connection clear")
+    mycursor_r = mydb_r.cursor()
+    print("Connection clear")
     updated_gyms = 0
     updated_pokestops = 0
     
