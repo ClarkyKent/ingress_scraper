@@ -134,7 +134,6 @@ def get_all_portals(login, tiles):
                                 #print(entry[0])
         except:
             print("could not parse all prtals")
-    print(portals)
     return portals, portal_id
 
 if __name__ == "__main__":
@@ -158,17 +157,17 @@ if __name__ == "__main__":
     print_configs(config)
 
     print("Initialize/Start DB Session")
-    mydb_r = connect(
-        host=config['db_r_host'],
-        user=config['db_r_user'],
-        passwd=config['db_r_pass'],
-        database=config['db_r_name'],
-        port=config['db_r_port'],
-        charset=config['db_r_charset'],
-        autocommit=True)
+    # mydb_r = connect(
+        # host=config['db_r_host'],
+        # user=config['db_r_user'],
+        # passwd=config['db_r_pass'],
+        # database=config['db_r_name'],
+        # port=config['db_r_port'],
+        # charset=config['db_r_charset'],
+        # autocommit=True)
 
-    mycursor_r = mydb_r.cursor()
-    print("Connection clear")
+    # mycursor_r = mydb_r.cursor()
+    # print("Connection clear")
     updated_gyms = 0
     updated_pokestops = 0
     
