@@ -75,12 +75,6 @@ def create_config(config_path):
     config['db_pokestop_image'] = config_raw.get(
         'DB',
         'TABLE_POKESTOP_IMAGE')
-    config['username'] = config_raw.get(
-        'Ingress',
-        'USERNAME')
-    config['pwd'] = config_raw.get(
-        'Ingress',
-        'PASSWORD')
     config['cookies'] = config_raw.get(
         'Ingress',
         'COOKIES')
@@ -109,11 +103,7 @@ def print_configs(config):
     print("")
     print("~"*15)
 
-def get_all_portals(login, bbox):
-    mTiles = MapTiles(bbox)
-    tiles = mTiles.getTiles()
-    total_tiles = len(tiles)
-    print("Number of tiles in boundry are : ",total_tiles)
+def get_all_portals(login, tiles):
     timed_out_items = []
     portals = []
     portal_id = []
@@ -160,26 +150,35 @@ if __name__ == "__main__":
     print_configs(config)
 
     print("Initialize/Start DB Session")
-    mydb_r = connect(
-        host=config['db_r_host'],
-        user=config['db_r_user'],
-        passwd=config['db_r_pass'],
-        database=config['db_r_name'],
-        port=config['db_r_port'],
-        charset=config['db_r_charset'],
-        autocommit=True)
+    # mydb_r = connect(
+        # host=config['db_r_host'],
+        # user=config['db_r_user'],
+        # passwd=config['db_r_pass'],
+        # database=config['db_r_name'],
+        # port=config['db_r_port'],
+        # charset=config['db_r_charset'],
+        # autocommit=True)
 
-    mycursor_r = mydb_r.cursor()
-    print("Connection clear")
+    # mycursor_r = mydb_r.cursor()
+    # print("Connection clear")
     updated_gyms = 0
     updated_pokestops = 0
     
-    IngressLogin = IntelMap(config['cookies'], config['username'], config['pwd'])
+    IngressLogin = IntelMap(config['cookies'])
 
     if args.all_poi or args.ingress:
-        bbox = list(map(float, config['bbox'].split(',')))
-        bbox.append(zoom)
-        all_portal_details, all_portals_id = get_all_portals(IngressLogin, bbox)
+        bbox = list(config['bbox'].split(';'))
+        tiles = []
+        for cord in bbox:
+            bbox_cord = list(map(float, cord.split(',')))
+            bbox_cord.append(zoom)
+            mTiles = MapTiles(bbox_cord)
+            tiles = tiles + mTiles.getTiles()
+        print(tiles)
+        total_tiles = len(tiles)
+        print("Number of tiles in boundry are : ",total_tiles)
+
+        all_portal_details, all_portals_id = get_all_portals(IngressLogin, tiles)
         
     if args.ingress:
     
