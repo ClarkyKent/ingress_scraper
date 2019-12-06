@@ -3,3 +3,4 @@ lxml
 beautifulsoup4
 pymysql
 soupsieve
+DiscordWebhook
