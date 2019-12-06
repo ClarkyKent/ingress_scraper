@@ -179,7 +179,8 @@ if __name__ == "__main__":
     updated_pokestops = 0
     
     IngressLogin = IntelMap(config['cookies'])
-    if IngressLogin.isCookieOk is False:
+
+    if IngressLogin.getCookieStatus() is False:
         if config['whenable']:
             webhook = DiscordWebhook(url=config['whurl'], content='Cookie has expired or not working')
             response = webhook.execute()

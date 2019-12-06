@@ -79,8 +79,8 @@ class IntelMap:
         # 'https': 'socks5://127.0.0.1:1080',
     }
     def __init__(self, cookie):
-        self.login(cookie)
         self.isCookieOk = False
+        self.login(cookie)
 
     def login(self, cookie):
         try:
@@ -97,6 +97,10 @@ class IntelMap:
         except IndexError:
             print("Oops!, looks like you have a problem with your cookie.")
             self.isCookieOk = False
+
+
+    def getCookieStatus(self):
+        return self.isCookieOk
 
 
     def get_game_score(self):
