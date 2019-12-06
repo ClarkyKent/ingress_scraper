@@ -3,7 +3,9 @@ import argparse
 import json
 from pymysql import connect
 import math
+import sys
 import datetime
+from discord_webhook import DiscordWebhook
 
 # Python2 and Python3 compatibility
 try:
@@ -84,7 +86,12 @@ def create_config(config_path):
     config['bbox'] = config_raw.get(
         'Area',
         'BBOX')
-
+    config['whurl'] = config_raw.get(
+        'Discord',
+        'WEBHOOK')
+    config['whenable'] = config_raw.getboolean(
+        'Discord',
+        'ENABLED_WH')
     return config
 
 
@@ -172,6 +179,13 @@ if __name__ == "__main__":
     updated_pokestops = 0
     
     IngressLogin = IntelMap(config['cookies'])
+    if IngressLogin.isCookieOk is False:
+        if config['whenable']:
+            webhook = DiscordWebhook(url=config['whurl'], content='Cookie has expired or not working')
+            response = webhook.execute()
+        sys.exit()
+
+
 
     if args.all_poi or args.ingress:
         bbox = list(config['bbox'].split(';'))

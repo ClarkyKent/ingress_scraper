@@ -80,6 +80,7 @@ class IntelMap:
     }
     def __init__(self, cookie):
         self.login(cookie)
+        self.isCookieOk = False
 
     def login(self, cookie):
         try:
@@ -92,8 +93,10 @@ class IntelMap:
             print('cookies success')
             self.cookie_dict = dict_from_cookiejar(self.r.cookies)
             self.headers.update({'x-csrftoken': self.cookie_dict['csrftoken']})
+            self.isCookieOk = True
         except IndexError:
             print("Oops!, looks like you have a problem with your cookie.")
+            self.isCookieOk = False
 
 
     def get_game_score(self):

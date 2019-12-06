@@ -19,7 +19,11 @@ DB_INGRESS = PMSF_MANUAL_DB
 COOKIES = long_string_copied_from_browser
 
 [Area]
-BBOX = 0.00,0.00,0.00,0.00
+BBOX = 0.00,0.00,0.00,0.00;1.00,1.00,1.00,1.00;2.00,2.00,2.00,2.00
+
+[Discord]
+ENABLED_WH = False
+WEBHOOK = webhook_url
 
 [Other]
 ENCODING = utf-8
