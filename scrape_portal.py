@@ -338,7 +338,7 @@ if __name__ == "__main__":
             for gym_id in gym_result_ids:
                 ingress_portal_details = IngressLogin.get_portal_details(gym_id[0])
                 if not ingress_portal_details:
-                    print('Could not parse info for ', stop_id[0], 'check if it is valid gym', )
+                    print('Could not parse info for ', gym_id[0], 'check if it is valid gym', )
                     print(ingress_portal_details)
                 else:
                     insert_args = (ingress_portal_details.get('result')[portal_name],  ingress_portal_details.get('result')[portal_url],  gym_id[0] )
