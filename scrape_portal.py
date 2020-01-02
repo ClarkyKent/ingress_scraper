@@ -378,6 +378,7 @@ if __name__ == "__main__":
                     
             for stop_id in pokestop_result_ids:
                 ingress_portal_details = IngressLogin.get_portal_details(stop_id[0])
+                print(ingress_portal_details)
                 if ingress_portal_details is not None:
                     print(ingress_portal_details.get('result')[portal_name], ingress_portal_details.get('result')[portal_url])
                     insert_args = (ingress_portal_details.get('result')[portal_name],  ingress_portal_details.get('result')[portal_url],  stop_id[0] )                
