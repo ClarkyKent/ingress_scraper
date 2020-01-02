@@ -337,6 +337,7 @@ if __name__ == "__main__":
                 
             for gym_id in gym_result_ids:
                 ingress_portal_details = IngressLogin.get_portal_details(gym_id[0])
+				print(ingress_portal_details)
                 if ingress_portal_details is not None:
                     insert_args = (ingress_portal_details.get('result')[portal_name],  ingress_portal_details.get('result')[portal_url],  gym_id[0] )
                     try:
