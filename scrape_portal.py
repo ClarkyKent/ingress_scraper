@@ -205,7 +205,7 @@ if __name__ == "__main__":
     if args.ingress:
     
         print("Initialize/Start DB Session")
-        mydb_r = connect(
+        mydb_ingress = connect(
             host=config['db_r_host'],
             user=config['db_r_user'],
             passwd=config['db_r_pass'],
@@ -214,7 +214,7 @@ if __name__ == "__main__":
             charset=config['db_r_charset'],
             autocommit=True)
 
-        mycursor_ingres = mydb_r.cursor()
+        mycursor_ingress = mydb_ingress.cursor()
         print("Connection clear")
     
         portal_update_query = PORTAL_UPDATE_QUERY.format(
@@ -228,7 +228,7 @@ if __name__ == "__main__":
             updated_ts = datetime.datetime.now().strftime("%s")
             insert_portal_args = (val,  p_name,  p_url, lat, lon, updated_ts, updated_ts, updated_ts, p_name,  p_url, lat, lon)
             try:
-                mycursor_ingres.execute(portal_update_query, insert_portal_args)
+                mycursor_ingress.execute(portal_update_query, insert_portal_args)
                 print("~"*50)
                 print("inserted {0} into ingress table".format(p_name))
                 print("~"*50)
@@ -237,6 +237,8 @@ if __name__ == "__main__":
                 print("#"*50)
                 print("could not put in db {0} {1} ".format(val, p_name))
                 print("#"*50)
+        mycursor_ingress.close()
+        mydb_ingress.close()
 
     if args.all_poi:
         
@@ -395,3 +397,5 @@ if __name__ == "__main__":
                         print("~"*15)
                     
             print('Total pokestops updated: ', updated_pokestops)
+    mycursor_r.close()
+    mydb_r.close()
